@@ -1,0 +1,16 @@
+name = "sheetfit"
+description = "Fits SPICE models to datasheet data"
+version = "0.1.0-dev"
+
+authors = ["Garret Noble"]
+maintainers = ["Garret Noble <garretnoble@gmail.com>"]
+maintainers-logins = ["gtnoble"]
+licenses = "GPL-3.0-or-later"
+website = ""
+tags = []
+
+[[depends-on]]
+parse_args = "~0.9.0"
+
+[[depends-on]]
+utilada = "^2.8.0"

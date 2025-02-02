@@ -1,0 +1,108 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"name": "src",
+			"path": "../../../.local/share/alire/builds/parse_args_0.9.0_635f9e4f/1f6a17103c97916161bc6b273ce2fc17a6eba5985cb146cdc481b7d714375da2/src"
+		},
+		{
+			"name": "base",
+			"path": "../../../.local/share/alire/builds/utilada_2.8.0_0d266031/00a10ab3c11fe4a5fc9c90111c45cdf44926bc8ea2b16d8c99d81503f2faa27a/src/base"
+		},
+		{
+			"name": "beans",
+			"path": "../../../.local/share/alire/builds/utilada_2.8.0_0d266031/00a10ab3c11fe4a5fc9c90111c45cdf44926bc8ea2b16d8c99d81503f2faa27a/src/base/beans"
+		},
+		{
+			"name": "commands",
+			"path": "../../../.local/share/alire/builds/utilada_2.8.0_0d266031/00a10ab3c11fe4a5fc9c90111c45cdf44926bc8ea2b16d8c99d81503f2faa27a/src/base/commands"
+		},
+		{
+			"name": "dates",
+			"path": "../../../.local/share/alire/builds/utilada_2.8.0_0d266031/00a10ab3c11fe4a5fc9c90111c45cdf44926bc8ea2b16d8c99d81503f2faa27a/src/base/dates"
+		},
+		{
+			"name": "events",
+			"path": "../../../.local/share/alire/builds/utilada_2.8.0_0d266031/00a10ab3c11fe4a5fc9c90111c45cdf44926bc8ea2b16d8c99d81503f2faa27a/src/base/events"
+		},
+		{
+			"name": "files",
+			"path": "../../../.local/share/alire/builds/utilada_2.8.0_0d266031/00a10ab3c11fe4a5fc9c90111c45cdf44926bc8ea2b16d8c99d81503f2faa27a/src/base/files"
+		},
+		{
+			"name": "log",
+			"path": "../../../.local/share/alire/builds/utilada_2.8.0_0d266031/00a10ab3c11fe4a5fc9c90111c45cdf44926bc8ea2b16d8c99d81503f2faa27a/src/base/log"
+		},
+		{
+			"name": "os-linux64",
+			"path": "../../../.local/share/alire/builds/utilada_2.8.0_0d266031/00a10ab3c11fe4a5fc9c90111c45cdf44926bc8ea2b16d8c99d81503f2faa27a/src/base/os-linux64"
+		},
+		{
+			"name": "os-unix",
+			"path": "../../../.local/share/alire/builds/utilada_2.8.0_0d266031/00a10ab3c11fe4a5fc9c90111c45cdf44926bc8ea2b16d8c99d81503f2faa27a/src/base/os-unix"
+		},
+		{
+			"name": "properties",
+			"path": "../../../.local/share/alire/builds/utilada_2.8.0_0d266031/00a10ab3c11fe4a5fc9c90111c45cdf44926bc8ea2b16d8c99d81503f2faa27a/src/base/properties"
+		},
+		{
+			"name": "core",
+			"path": "../../../.local/share/alire/builds/utilada_2.8.0_0d266031/00a10ab3c11fe4a5fc9c90111c45cdf44926bc8ea2b16d8c99d81503f2faa27a/src/core"
+		},
+		{
+			"name": "concurrent",
+			"path": "../../../.local/share/alire/builds/utilada_2.8.0_0d266031/00a10ab3c11fe4a5fc9c90111c45cdf44926bc8ea2b16d8c99d81503f2faa27a/src/core/concurrent"
+		},
+		{
+			"name": "asm-intrinsic",
+			"path": "../../../.local/share/alire/builds/utilada_2.8.0_0d266031/00a10ab3c11fe4a5fc9c90111c45cdf44926bc8ea2b16d8c99d81503f2faa27a/src/core/concurrent/asm-intrinsic"
+		},
+		{
+			"name": "listeners",
+			"path": "../../../.local/share/alire/builds/utilada_2.8.0_0d266031/00a10ab3c11fe4a5fc9c90111c45cdf44926bc8ea2b16d8c99d81503f2faa27a/src/core/listeners"
+		},
+		{
+			"name": "strings",
+			"path": "../../../.local/share/alire/builds/utilada_2.8.0_0d266031/00a10ab3c11fe4a5fc9c90111c45cdf44926bc8ea2b16d8c99d81503f2faa27a/src/core/strings"
+		},
+		{
+			"name": "texts",
+			"path": "../../../.local/share/alire/builds/utilada_2.8.0_0d266031/00a10ab3c11fe4a5fc9c90111c45cdf44926bc8ea2b16d8c99d81503f2faa27a/src/core/texts"
+		},
+		{
+			"name": "sys",
+			"path": "../../../.local/share/alire/builds/utilada_2.8.0_0d266031/00a10ab3c11fe4a5fc9c90111c45cdf44926bc8ea2b16d8c99d81503f2faa27a/src/sys"
+		},
+		{
+			"name": "encoders",
+			"path": "../../../.local/share/alire/builds/utilada_2.8.0_0d266031/00a10ab3c11fe4a5fc9c90111c45cdf44926bc8ea2b16d8c99d81503f2faa27a/src/sys/encoders"
+		},
+		{
+			"name": "http",
+			"path": "../../../.local/share/alire/builds/utilada_2.8.0_0d266031/00a10ab3c11fe4a5fc9c90111c45cdf44926bc8ea2b16d8c99d81503f2faa27a/src/sys/http"
+		},
+		{
+			"name": "measures",
+			"path": "../../../.local/share/alire/builds/utilada_2.8.0_0d266031/00a10ab3c11fe4a5fc9c90111c45cdf44926bc8ea2b16d8c99d81503f2faa27a/src/sys/measures"
+		},
+		{
+			"name": "os-unix",
+			"path": "../../../.local/share/alire/builds/utilada_2.8.0_0d266031/00a10ab3c11fe4a5fc9c90111c45cdf44926bc8ea2b16d8c99d81503f2faa27a/src/sys/os-unix"
+		},
+		{
+			"name": "processes",
+			"path": "../../../.local/share/alire/builds/utilada_2.8.0_0d266031/00a10ab3c11fe4a5fc9c90111c45cdf44926bc8ea2b16d8c99d81503f2faa27a/src/sys/processes"
+		},
+		{
+			"name": "serialize",
+			"path": "../../../.local/share/alire/builds/utilada_2.8.0_0d266031/00a10ab3c11fe4a5fc9c90111c45cdf44926bc8ea2b16d8c99d81503f2faa27a/src/sys/serialize"
+		},
+		{
+			"name": "streams",
+			"path": "../../../.local/share/alire/builds/utilada_2.8.0_0d266031/00a10ab3c11fe4a5fc9c90111c45cdf44926bc8ea2b16d8c99d81503f2faa27a/src/sys/streams"
+		}
+	],
+	"settings": {}
+}

@@ -11,19 +11,21 @@ package body Curve_Data is
       use Ada.Text_IO;
       use Ada.Strings.Fixed;
       
-      package Point_Vector is new
+      type Line is array (Independent_Variable'First .. Independent_Variable'Last + 1) of Float;
+
+      package Points_Vector is new
          Ada.Containers.Vectors
             (Index_Type => Natural, Element_Type => Point);
-
+         
       File : File_Type;
       Line_Number : Natural := 0;
       Delimiter : constant Character := ',';
-      Parsed_Points : Point_Vector.Vector;
+      Parsed_Points : Points_Vector.Vector;
 
       -- Procedure to split a CSV line into an array of fields
-      function Split_Line (S : String; Sep : Character) return Point is
+      function Split_Line (S : String; Sep : Character) return Line is
 
-         Parsed_Point : Point;
+         Parsed_Line : Line;
          Count  : Natural := Point'First;
          Pos    : Natural := Index (S, Sep);
          Start  : Natural := S'First;
@@ -31,7 +33,7 @@ package body Curve_Data is
       begin
          while Pos > 0 loop
             Get (S(Start .. Pos - 1), Parsed_Coordinate);
-            Parsed_Point(Count) := Parsed_Coordinate;
+            Parsed_Line(Count) := Parsed_Coordinate;
             Start := Pos + 1;
             Pos := Index (S(Start .. S'Last), Sep);
             Count := Count + 1;
@@ -40,10 +42,10 @@ package body Curve_Data is
          -- Last field
          if Start <= S'Last then
             Get (S(Start .. S'Last), Parsed_Coordinate);
-            Parsed_Point(Count) := Parsed_Coordinate;
+            Parsed_Line(Count) := Parsed_Coordinate;
          end if;
 
-         return Parsed_Point;
+         return Parsed_Line;
       end Split_Line;
 
    begin
@@ -52,14 +54,17 @@ package body Curve_Data is
       while not End_Of_File (File) loop
          declare
             Line_String : String := Get_Line (File);
-            Point      : Unbounded_String_Array := Split_Line (Line_String, Delimiter);
+            Line      : Unbounded_String_Array := Split_Line (Line_String, Delimiter);
+            Next_Point : Point (
+               x => Independent_Variable (Line (Line'First)), 
+               y => Dependent_Variable (Line (Line'First + 1 .. Line'Last)));
          begin
-            Parsed_Points.Append (Point);
+            Parsed_Points.Append (Next_Point);
          end;
       end loop;
       
       declare
-         Returned_Curve : Curve (0 .. Parsed_Points.Length - 1);
+         Returned_Curve : Curve;
          Index : Returned_Curve'First;
          procedure Fill_Curve (Element : Point) is
          begin

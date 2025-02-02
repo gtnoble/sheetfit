@@ -1,16 +1,11 @@
 with Parse_Args;
 with Ada.Text_IO; use Ada.Text_IO;
-with Curve_Data;
+with Diode;
 procedure Sheetfit is
    AP : Parse_Args.Argument_Parser;
    
-   type Point_2D is array (0 .. 1) of Float;
-   package Curve_2D is new Curve_Data (Point_2D);
-   
-   IV_Curve_Filename : String;
-   IV_Curve : Curve_2D.Curve;
-
    Invalid_Component: exception;
+   Component_Type : String;
 begin
    AP.Add_Option (
       O => Parse_Args.Make_String_Option, 
@@ -28,14 +23,14 @@ begin
 
    AP.Add_Option (
       O => Parse_Args.Make_Natural_Option(-1.0), 
-      Name => "saturation current guess", 
+      Name => "saturation-current", 
       Short_Option => 's',
       Long_Option => "saturation-current", 
       Usage => "estimate for the diode saturation current");
       
    AP.Add_Option (
       O => Parse_Args.Make_Natural_Option(-1.0), 
-      Name => "ideality factor guess", 
+      Name => "ideality-factor", 
       Short_Option => 'n', 
       Long_Option => "ideality-factor", 
       Usage => "estimate for the diode ideality factor");
@@ -53,12 +48,24 @@ begin
       if AP.Boolean_Value ("help") then
          AP.Usage;
       else 
-         IV_Curve_Filename := AP.String_Value ("iv-data-file");
-         case AP.String_Value ("type") is
-               when "diode" => Fit_Diode (AP);
-               when "" => raise Invalid_Component with "error: a component type must be specified";
-               when others => raise Invalid_Component with "error: invalid component type: " + AP.String_Value ("type");
-         end case;
+         declare
+         Component_Type : String := AP.String_Value ("type");
+         begin
+            case AP.String_Value ("type") is
+                  when "diode" => Process_Diode (AP);
+                  when "" => raise Invalid_Component with "error: a component type must be specified";
+                  when others => raise Invalid_Component with "error: invalid component type: " + AP.String_Value ("type");
+            end case;
+         end;
       end if;
    end if;
 end Sheetfit;
+
+with Diode;
+procedure Process_Diode (AP : Parse_Args.Argument_Parser)
+is
+   Diode_Model : Diode.Diode_Type;
+   Data_File_Name : String := AP.String_Value ("iv-data-file");
+begin
+
+end Process_Diode;

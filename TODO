@@ -1,0 +1,3 @@
+Complete Diode Top-Level handler and test
+Add Shunt resistance to diode model
+Allow for the creation of subcircuit models (ex. Diode with shunt conductance)

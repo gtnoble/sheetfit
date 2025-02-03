@@ -22,14 +22,14 @@ begin
       Usage => "A csv file containing the IV curve data");
 
    AP.Add_Option (
-      O => Parse_Args.Make_Natural_Option(-1.0), 
+      O => Parse_Args.Make_String_Option, 
       Name => "saturation-current", 
       Short_Option => 's',
       Long_Option => "saturation-current", 
       Usage => "estimate for the diode saturation current");
       
    AP.Add_Option (
-      O => Parse_Args.Make_Natural_Option(-1.0), 
+      O => Parse_Args.Make_String_Option, 
       Name => "ideality-factor", 
       Short_Option => 'n', 
       Long_Option => "ideality-factor", 
@@ -61,11 +61,21 @@ begin
    end if;
 end Sheetfit;
 
+with Ada.Wide_Wide_Text_IO.Wide_Wide_Bounded_IO;
 with Diode;
 procedure Process_Diode (AP : Parse_Args.Argument_Parser)
 is
-   Diode_Model : Diode.Diode_Type;
    Data_File_Name : String := AP.String_Value ("iv-data-file");
+   Saturation_Current : Float := Float'Value(AP.String_Value ("saturation-current"));
+   Ideality_Factor : Float :=  Float'Value(AP.String_Value ("ideality-factor"));
+   Series_Resistance : Float := 0.0;
+   Diode_Guess : Diode.Diode_Type := (Saturation_Current =>
+                                        Saturation_Current,
+                                      Ideality =>
+                                        Ideality_Factor,
+                                      Series_Resistance =>
+                                        Series_Resistance);
+   Fitted_Diode : Diode.Diode_Type := Diode.Fit (Data_File_Name, Diode_Guess);
 begin
-
+   Ada.Text_IO.Put_Line(Diode.Spice_Model(Fitted_Diode));
 end Process_Diode;

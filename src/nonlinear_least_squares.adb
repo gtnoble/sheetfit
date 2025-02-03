@@ -2,7 +2,8 @@ with gsl_gsl_vector_double_h; use gsl_gsl_vector_double_h;
 with System;
 with Interfaces.C; use Interfaces.C;
 package body Nonlinear_Least_Squares is
-   function Fit (Curve: Curve.Curve; Fitted_Function : Fit_Function; Initial_Guess : Function_Parameters) return Function_Parameters is
+   function Fit (Curve: Fitted_Curve.Curve; Fitted_Function : access function (X : Fitted_Curve.Independent_Variable; Parameters : Function_Parameters) return Fitted_Curve.Dependent_Variable; Initial_Guess : Function_Parameters) return Function_Parameters 
+   is
       fdf : aliased gsl_multifit_nlinear_fdf := (
          f => Objective_Function'Access,  
          df => null, 
@@ -39,7 +40,7 @@ package body Nonlinear_Least_Squares is
    end Fit;
    
    procedure Array_To_GSL_Vector (
-      Float_Array : array (Integer range <>) of Float; 
+      Float_Array : Real_Array_Type; 
       Vector : access gsl_vector)
    is
    begin
@@ -53,7 +54,7 @@ package body Nonlinear_Least_Squares is
       end loop;
    end Params_To_GSL_Vector;
 
-   function GSL_Vector_To_Array (Vector : access gsl_vector) return array (Natural range <>) of Float
+   function GSL_Vector_To_Array (Vector : access gsl_vector) return Real_Array_Type 
    is
       Float_Array : array (0 .. Vector.size - 1) of Float;
    begin

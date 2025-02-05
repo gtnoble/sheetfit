@@ -1,118 +1,92 @@
-with gsl_gsl_vector_double_h; use gsl_gsl_vector_double_h;
-with System;
-with Interfaces.C; use Interfaces.C;
+with System.Address_To_Access_Conversions;
 package body Nonlinear_Least_Squares is
-   function Fit (Curve: Fitted_Curve.Curve; Fitted_Function : access function (X : Fitted_Curve.Independent_Variable; Parameters : Function_Parameters) return Fitted_Curve.Dependent_Variable; Initial_Guess : Function_Parameters) return Function_Parameters 
+   
+   procedure Fit 
+     (Curve           : access constant Fitted_Curve.Curve;
+      Fitted_Function : Objective_Function_Type;
+      Parameters   : Function_Parameters_Type)
    is
-      fdf : aliased gsl_multifit_nlinear_fdf := (
-         f => Objective_Function'Access,  
+      n : constant stddef_h.size_t := stddef_h.size_t (Curve'Length);
+      p : constant stddef_h.size_t := Parameters.size;
+      
+      type GSL_Context_Access_Type is access all GSL_Context_Type;
+      Context : aliased GSL_Context_Type := (Objective_Function => Fitted_Function, Curve => Curve);
+      Context_Access : GSL_Context_Access_Type := Context'Access;
+
+
+      fit_type : access constant gsl_multifit_nlinear_type := gsl_multifit_nlinear_trust;
+      fdf_parameters : aliased gsl_multifit_nlinear_parameters := gsl_multifit_nlinear_default_parameters;
+      Functions_Config : aliased gsl_multifit_nlinear_fdf := (
+         f => GSL_Objective_Function'Access,  
          df => null, 
          fvv => null, 
-         n => stddef_h.size_t (Curve'Length), 
-         p => stddef_h.size_t (Initial_Guess'Length), 
-         params => null, 
+         n => n, 
+         p => p, 
+         params => Context_Access'Address, 
          nevalf => 0, 
          nevaldf => 0, 
          nevalfvv => 0);
 
-      function Objective_Function (
-         function_params : access gsl_vector; 
-         params : System.Address;  
-         errors : access gsl_vector) return int 
-         with Convention => C 
-      is
-         Func_Params : Function_Parameters := GSL_Vector_To_Array (function_params);
-         Y_Error : array (Curve'Range) of Float;
-      begin
-         
-         for Index in Y_Error'Range loop
-            Y_Error (Index) := Fitted_Function (Curve (Index).x, Func_Params) - Curve (Index).y;
-         end loop;
-
-         Array_To_GSL_Vector (Y_Error, errors);
-         
-         return 0;
-      end f;
-      
-
-   begin
-      return Execute_Fit (Initial_Guess, fdf);
-   end Fit;
-   
-   procedure Array_To_GSL_Vector (
-      Float_Array : Real_Array_Type; 
-      Vector : access gsl_vector)
-   is
-   begin
-      pragma Assert(Vector.size = Float_Array'Length);
-
-      for Index in 0 .. Vector.size loop
-         gsl_vector_set(
-            v => Vector, 
-            i => Index, 
-            x => Float_Array (Params'First + Index));
-      end loop;
-   end Params_To_GSL_Vector;
-
-   function GSL_Vector_To_Array (Vector : access gsl_vector) return Real_Array_Type 
-   is
-      Float_Array : array (0 .. Vector.size - 1) of Float;
-   begin
-      for Index in Float_Array'Range loop
-         Float_Array(Index) := gsl_vector_get(Vector, Index);
-      end loop;
-      return Float_Array;
-   end GSL_Vector_To_Array;
-
-   function Execute_Fit (
-      Initial_Guess : Function_Parameters; 
-      Functions_Config : gsl_multifit_nlinear_fdf) return Function_Parameters 
-      is
-      n : constant stddef_h.size_t := Functions_Config.n;
-      p : constant stddef_h.size_t := Functions_Config.p;
-      pragma Assert(Initial_Guess'Length = p);
-
-      fit_type : constant gsl_multifit_nlinear_type := gsl_multifit_nlinear_trust;
-      fdf_parameters : aliased gsl_multifit_nlinear_parameters := gsl_multifit_nlinear_default_parameters;
-
-      weights : access gsl_vector := gsl_vector_alloc (n);
-      x : access gsl_vector := gsl_vector_alloc (p);
-      workspace : access gsl_multifit_nlinear_workspace := gsl_multifit_nlinear_alloc (
-         T => fit_type, 
-         params => fdf'fdf_parameters, 
-         n => n, 
-         p => p);
    begin
       
-      Array_To_GSL_Vector (Initial_Guess, x);
-
-      gsl_multifit_nlinear_winit (x'Access, weights'Access, fdf'Access, workspace);
       declare
+         weights : access gsl_vector := gsl_vector_alloc (n);
+         workspace : access gsl_multifit_nlinear_workspace := gsl_multifit_nlinear_alloc (
+            T => fit_type, 
+            params => fdf_parameters'Access, 
+            n => n, 
+            p => p);
+
+         Workspace_Init_Status : int := gsl_multifit_nlinear_winit (Parameters, weights, Functions_Config'Access, workspace);
+
          Xtol : constant double := 1.0E-8;
          Gtol : constant double := 1.0E-8;
          Ftol : constant double := 1.0E-8;
          Maxiter : stddef_h.size_t := 1000;
 
          info : aliased int;
-         status : gsl_multifit_nlinear_driver (
+         status : int := gsl_multifit_nlinear_driver (
             maxiter => Maxiter, 
             xtol => Xtol, 
             gtol => Gtol, 
             ftol => Ftol, 
             callback => null, 
-            callback_params => null, 
+            callback_params => System.Address (System.Null_Address), 
             info => info'Access, 
             w => workspace);
-         Result : Function_Parameters;
       begin
-         Result := GSL_Vector_To_Array (x);
          gsl_vector_free(weights);
-         gsl_vector_free(x);
          gsl_multifit_nlinear_free (workspace);
 
-         return Result;
       end;
-   end Execute_Fit;
+   end Fit;
+
+   function GSL_Objective_Function (
+      arg1 : access constant gsl_gsl_vector_double_h.gsl_vector; 
+      arg2 : access System.Address;  
+      arg3 : access gsl_gsl_vector_double_h.gsl_vector) return int 
+   is
+      package GSL_Context_Access_Conversion is new System.Address_To_Access_Conversions (GSL_Context_Type);
+      Y_Error : array (0 .. arg3.size - 1) of double;
+      Context : GSL_Context_Access_Conversion.Object_Pointer := GSL_Context_Access_Conversion.To_Pointer (arg2.all);
+      Objective_Params : access constant gsl_vector := arg1;
+      Curve : Fitted_Curve.Curve := Context.Curve.all;
+      Objective_Function : Objective_Function_Type := Context.Objective_Function;
+   begin
+      
+      for Index in 0 .. (arg3.size - 1) loop
+         declare
+            Point : Fitted_Curve.Point := Curve (Natural(Index));
+         begin
+         gsl_vector_set (
+            arg3,
+            Index,
+            Objective_Function (Point.x, Objective_Params) - double (Point.y));
+         end;
+      end loop;
+
+      return 0;
+   end GSL_Objective_Function;
       
 
    

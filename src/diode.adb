@@ -47,17 +47,16 @@ package body Diode is
               Voltage_Drop       => Ideal_Diode_Voltage_Drop,
               Ideality           => Diode_Model.Ideality);
       end Solve_For_Ideal_Diode_Voltage_Drop;
+      
+      Ideal_Diode_Voltage_Drop : Voltage_Type := Roots.Find_Root
+          (F => Solve_For_Ideal_Diode_Voltage_Drop'Access, Bound_1 => 0.0,
+           Bound_2            => Voltage_Drop,
+           Absolute_Tolerance => 1.0E-15);
 
    begin
-      return
-        Roots.Find_Root
-          (F => Solve_For_Ideal_Diode_Voltage_Drop'Access, Bound_1 => 0.0,
-           Bound_2            =>
-             Ideal_Diode_Current
-               (Saturation_Current => Diode_Model.Saturation_Current,
-                Voltage_Drop       => Voltage_Drop,
-                Ideality           => Diode_Model.Ideality),
-           Absolute_Tolerance => 1.0E-15);
+      return Ideal_Diode_Current(
+         Saturation_Current => Diode_Model.Saturation_Current, 
+         Voltage_Drop => Ideal_Diode_Voltage_Drop, Ideality => Diode_Model.Ideality);
    end Current;
 
    function Ideal_Diode_Current
